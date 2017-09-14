@@ -1,55 +1,104 @@
-/**
- * Created by JackHui on 2017/9/13.
- */
-import React from 'react';
+import React from 'react'
 import Header from './components/header'
-import Progress from './components/progress'
+import Player from './page/player'
+import MusicList from './page/musiclist'
+import {
+    MUSIC_LIST
+} from './config/musiclist'
+import {
+    Router,
+    IndexRoute,
+    Link,
+    Route,
+    hashHistory
+} from 'react-router'
+import Pubsub from 'pubsub-js'
 
-let duration =null;
-let Root=React.createClass({
-    getDefaultProps(){
+let App = React.createClass({
+    getInitialState() {
         return {
-            barColor:'#2f9842'
+            currentMusicItem: MUSIC_LIST[0],
+            musicList: MUSIC_LIST
         }
     },
-    getInitialState(){
-        return {
-            progress:'-'
-        }
-    },
-    componentDidMount(){
-      $('#player').jPlayer({
-          ready:function () {
-              $(this).jPlayer('setMedia',{
-                  mp3:'http://oj4t8z2d5.bkt.clouddn.com/%E9%AD%94%E9%AC%BC%E4%B8%AD%E7%9A%84%E5%A4%A9%E4%BD%BF.mp3'
-              }).jPlayer('play');
-          },
-          supplied:'mp3',
-          wmode:'window'
-      });
-      $('#player').bind($.jPlayer.event.timeupdate,(e) => {
-          duration=e.jPlayer.status.duration;
+    playMusic(musicItem) {
+        $('#player').jPlayer('setMedia', {
+            mp3: musicItem.file
+        }).jPlayer('play');
         this.setState({
-            progress:e.jPlayer.status.currentPercentAbsolute
+            currentMusicItem: musicItem
         });
-      });
     },
-    //解绑
-    componentWillUnMount(){
-       $('#player').unbind($.jPlayer.event.timeupdate);
+    playNext(type = 'next') {
+        let index = this.findMusicIndex(this.state.currentMusicItem);
+        let newIndex = null;
+        let musicListLength = this.state.musicList.length;
+        if (type === 'next') {
+            newIndex = (index + 1) % musicListLength;
+        } else {
+            newIndex = (index - 1 + musicListLength) % musicListLength;
+        }
+        this.playMusic(this.state.musicList[newIndex]);
     },
-    progressChangeHandler(progress){
-       $('#player').jPlayer('play',duration * progress);
+    findMusicIndex(musicItem) {
+        return this.state.musicList.indexOf(musicItem);
     },
-    render(){
-        return(
+    componentDidMount() {
+        $('#player').jPlayer({
+            supplied: 'mp3',
+            wmode: 'window'
+        });
+        this.playMusic(this.state.currentMusicItem);
+        $('#player').bind($.jPlayer.event.ended, (e) => {
+            this.playNext();
+            console.log('palyend');
+        });
+        Pubsub.subscribe('PLAY_MUSIC', (msg, musicItem) => {
+            this.playMusic(musicItem);
+        });
+        Pubsub.subscribe('DELETE_MUSIC', (msg, musicItem) => {
+            this.setState({
+                musicList: this.state.musicList.filter(item => {
+                    return item !== musicItem;
+                })
+            })
+        });
+        Pubsub.subscribe('PLAY_NEXT', (msg, musicItem) => {
+            this.playNext('next');
+        });
+        Pubsub.subscribe('PLAY_PREV', (msg, musicItem) => {
+            this.playNext('prev');
+        });
+
+    },
+    componentWillUnMount() {
+        Pubsub.unsubscribe('PLAY_MUSIC');
+        Pubsub.unsubscribe('DELETE_MUSIC');
+        Pubsub.unsubscribe('PLAY_NEXT');
+        Pubsub.unsubscribe('PLAY_PREV');
+        $('#player').unbind($.jPlayer.event.ended)
+    },
+    render() {
+        return (
             <div>
-                <Header />
-                <Progress progress={this.state.progress}
-                onProgressChange={this.progressChangeHandler}
-                barColor="#ff0000"/>
+                <Header/>
+                {React.cloneElement(this.props.children,this.state)}
             </div>
         );
     }
 });
+
+let Root = React.createClass({
+    render() {
+        return (
+            <Router history = {hashHistory}>
+                <Route path="/" component={App}>
+                    <IndexRoute component={Player}/>
+                    <Route path="/list" component={MusicList}/>
+                </Route>
+            </Router>
+        );
+    }
+})
+
 export default Root;

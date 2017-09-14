@@ -12,7 +12,7 @@ html, body {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  -webkit-box-pack: flex-start;
+  -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
   -webkit-box-align: center;
@@ -36,7 +36,7 @@ html, body {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  -webkit-box-pack: flex-start;
+  -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
   -webkit-box-align: center;
@@ -61,7 +61,7 @@ html, body {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  -webkit-box-pack: flex-start;
+  -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
   -webkit-box-align: center;
@@ -87,7 +87,7 @@ html, body {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    -webkit-box-pack: flex-start;
+    -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
     justify-content: flex-start;
     -webkit-box-align: center;
@@ -190,7 +190,7 @@ html, body {
     width: 51px;
     height: 51px;
     margin: 0 20px;
-    background: url("../images/icon-control.png") no-repeat; }
+    background: url("../images/icons.png") no-repeat; }
     .player-btn a:hover {
       opacity: 0.7; }
   .player-btn .play-prev {
@@ -225,7 +225,7 @@ html, body {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    -webkit-box-pack: flex-start;
+    -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
     justify-content: flex-start;
     -webkit-box-align: center;

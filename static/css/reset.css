@@ -29,7 +29,7 @@ body {
 	-webkit-user-select: none;
 	-webkit-text-size-adjust: none;
 	color: #666;
-	font-family: 'Lucida Grande', 'Helvetica', 'Microsoft yahei', 'STHeiti';
+	font-family: 'Lucida Grande', 'Helvetica', 'Microsoft yahei', 'STHeiti', serif;
 }
 a, img {
 	-webkit-touch-callout: none;
