@@ -1,17 +1,14 @@
-/**
- * Created by JackHui on 2017/9/13.
- */
-import React from 'react';
+import React from 'react'
 import './header.less'
 
-let Header = React.createClass({
+class Header extends React.Component {
     render(){
-        return(
+        return (
             <div className="components-header row">
-                <img src="/static/images/logo.png" width="40" className="-col-auto" alt=""/>
+                <img src="static/images/logo.png" width="40" alt="" className="-col-auto"/>
                 <h1 className="caption">React Music Player</h1>
             </div>
-        );
+        )
     }
-});
+}
 export default Header;

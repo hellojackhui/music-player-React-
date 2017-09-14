@@ -1,56 +1,44 @@
-var webpack = require('webpack');
-var path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-
-module.exports={
-	//webpack-dev-server的加载
-	entry:[
-		'webpack-dev-server/client?http://localhost:3000',
-		'webpack/hot/only-dev-server',
-		//react热更新，局部修改页面
-		'react-hot-loader/patch',
-		path.join(__dirname,'app/index.js')
+'use strict';
+const webpack = require('webpack');
+const path=require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+	entry :[
+		// 这里是你的入口文件
+		'./app/index.js'
 	],
-	output: {
-        path: path.join(__dirname, '/dist/'),
-        filename: '[name].js',
-        publicPath: '/'
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-          template: './index.tpl.html',
-          inject: 'body',
-          filename: './index.html'
-        }),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('development')
-        })
-    ],
-    module: {
-        resolve:{
-            extensions:['','.js','.json']
-        },        
-        loaders: [
-            {
-              test: /\.js$/,
-              exclude: /node_modules/,
-              loader: "babel-loader",
-              query:
-                {
-                  presets:['react','es2015']
-                }
-            },
-            {
-                test: /\.css$/,
-                loader: "style!css"
-            },
-            {
-                test: /\.less/,
-                loader: 'style-loader!css-loader!less-loader'
-            }
-        ]
-    }
-};
+	output:{
+		path : path.resolve(__dirname , './dist'),
+		filename:'bundle.js',
+	},
+	module:{
+		rules:[{
+			test:/\.js$/,
+			exclude:/node_modules/,
+			loader:"babel-loader",
+			options : {
+				presets:["react","es2015"]
+			},
+		},{
+			test:/\.less$/,
+			exclude:/node_modules/,
+			use:[{
+				loader:'style-loader'
+			},{
+				loader:'css-loader'
+			},{
+				loader:'less-loader'
+			}]
+		}]
+	},
+	plugins: [
+		/*html-webpack-plugin插件*/
+		new HtmlWebpackPlugin({
+			template: './index.html',
+			inject :'body',
+			filename:'./index.html'
+		}),
+		/*热替换*/
+		new webpack.HotModuleReplacementPlugin(),
+	]
+}
