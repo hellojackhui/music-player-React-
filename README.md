@@ -3,8 +3,8 @@ React Music Player/react音乐播放器
 
 ## 技术栈
 
-React框架  
-webpack打包工具
+React框架  <br>
+webpack打包工具<br>
 less css预处理语言
 
 ## 使用方法
